@@ -2,6 +2,9 @@ import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import type { Image } from "@/types/image";
 
+const IMAGES_PER_PAGE = 20;
+const TOTAL_IMAGES = 1000;
+
 export const useGalleryStore = defineStore("gallery", () => {
 	// State
 	const images = ref<Image[]>([]);
@@ -11,7 +14,9 @@ export const useGalleryStore = defineStore("gallery", () => {
 	const error = ref<string | null>(null);
 
 	// Total pages computed
-	const totalPages = computed(() => Math.ceil(1000 / 20));
+	const totalPages = computed(() =>
+		Math.ceil(TOTAL_IMAGES / IMAGES_PER_PAGE)
+	);
 
 	// Actions
 	async function fetchImages(page: number) {
@@ -20,7 +25,7 @@ export const useGalleryStore = defineStore("gallery", () => {
 
 		try {
 			const response = await fetch(
-				`https://picsum.photos/v2/list?page=${page}&limit=20`
+				`https://picsum.photos/v2/list?page=${page}&limit=${IMAGES_PER_PAGE}`
 			);
 
 			if (!response.ok) {
@@ -70,5 +75,7 @@ export const useGalleryStore = defineStore("gallery", () => {
 		previousPage,
 		getImageById,
 		setSelectedImageId,
+		IMAGES_PER_PAGE,
+		TOTAL_IMAGES,
 	};
 });

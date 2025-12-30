@@ -50,6 +50,10 @@ const visiblePages = computed(() => {
 function goToPage(page: number) {
 	store.fetchImages(page);
 }
+
+function retryFetch() {
+	store.fetchImages(store.currentPage);
+}
 </script>
 
 <template>
@@ -57,7 +61,8 @@ function goToPage(page: number) {
 		<div v-if="store.isLoading" class="loading">Loading images...</div>
 
 		<div v-else-if="store.error" class="error">
-			{{ store.error }}
+			<p>{{ store.error }}</p>
+			<button @click="retryFetch" class="retry-button">Try Again</button>
 		</div>
 
 		<div v-else>
@@ -169,6 +174,7 @@ function goToPage(page: number) {
 		outline-offset: 2px;
 	}
 }
+
 .pagination {
 	display: flex;
 	align-items: center;
@@ -221,9 +227,20 @@ function goToPage(page: number) {
 	text-align: center;
 	padding: 12px;
 	font-size: 14px;
+	font-weight: 500;
 }
 .error {
 	color: #d32f2f;
+}
+
+.retry-button {
+	padding: 6px;
+	margin: 20px;
+	border: 1px solid var(--text-dark);
+	border-radius: 4px;
+	background-color: var(--secondary-bg);
+	color: var(--text-dark);
+	font-weight: 500;
 }
 
 .image-counter {

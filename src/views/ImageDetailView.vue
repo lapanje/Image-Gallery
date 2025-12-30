@@ -130,7 +130,7 @@ function goToNextImage() {
 
 			<div class="details-container">
 				<div class="resolution-info">
-					{{ currentImage.width }} × {{ currentImage.height }}
+					{{ currentImage.width }} x {{ currentImage.height }}
 				</div>
 
 				<div class="image-container">
@@ -138,6 +138,7 @@ function goToNextImage() {
 						:src="`https://picsum.photos/id/${currentImage.id}/1080/1080`"
 						:alt="`Photo by ${currentImage.author}`"
 						class="image"
+						loading="lazy"
 					/>
 				</div>
 			</div>

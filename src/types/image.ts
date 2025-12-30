@@ -6,10 +6,3 @@ export interface Image {
 	url: string;
 	download_url: string;
 }
-
-export interface PaginationInfo {
-	currentPage: number;
-	perPage: number;
-	totalImages: number;
-	totalPages: number;
-}
