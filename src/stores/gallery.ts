@@ -14,9 +14,7 @@ export const useGalleryStore = defineStore("gallery", () => {
 	const error = ref<string | null>(null);
 
 	// Total pages computed
-	const totalPages = computed(() =>
-		Math.ceil(TOTAL_IMAGES / IMAGES_PER_PAGE)
-	);
+	const totalPages = computed(() => Math.ceil(TOTAL_IMAGES / IMAGES_PER_PAGE));
 
 	// Actions
 	async function fetchImages(page: number) {
@@ -24,9 +22,7 @@ export const useGalleryStore = defineStore("gallery", () => {
 		error.value = null;
 
 		try {
-			const response = await fetch(
-				`https://picsum.photos/v2/list?page=${page}&limit=${IMAGES_PER_PAGE}`
-			);
+			const response = await fetch(`https://picsum.photos/v2/list?page=${page}&limit=${IMAGES_PER_PAGE}`);
 
 			if (!response.ok) {
 				throw new Error("Failed to fetch images");
@@ -35,8 +31,7 @@ export const useGalleryStore = defineStore("gallery", () => {
 			images.value = await response.json();
 			currentPage.value = page;
 		} catch (err) {
-			error.value =
-				err instanceof Error ? err.message : "An error occurred";
+			error.value = err instanceof Error ? err.message : "An error occurred";
 			console.error("Error fetching images:", err);
 		} finally {
 			isLoading.value = false;

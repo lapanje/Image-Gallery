@@ -20,11 +20,11 @@ const currentImageIndex = computed(() => {
 });
 
 const hasPreviousImage = computed(() => {
-	return currentImageIndex.value > 0;
+	return !(currentImageIndex.value === 0 && store.currentPage === 1);
 });
 
 const hasNextImage = computed(() => {
-	return currentImageIndex.value < store.images.length - 1;
+	return !(currentImageIndex.value === store.images.length - 1 && store.currentPage === store.totalPages);
 });
 
 const previousImageId = computed(() => {
@@ -54,21 +54,43 @@ function goBackToGallery() {
 	router.push({ name: "gallery" });
 }
 
-function goToPreviousImage() {
+async function goToPreviousImage() {
 	if (previousImageId.value) {
 		router.push({
 			name: "photo-detail",
 			params: { id: previousImageId.value },
 		});
 	}
+	// Load previous page when at the start of current page
+	else if (currentImageIndex.value === 0 && store.currentPage > 1) {
+		await store.previousPage();
+		const lastImage = store.images[store.images.length - 1];
+		if (lastImage) {
+			router.push({
+				name: "photo-detail",
+				params: { id: lastImage.id },
+			});
+		}
+	}
 }
 
-function goToNextImage() {
+async function goToNextImage() {
 	if (nextImageId.value) {
 		router.push({
 			name: "photo-detail",
 			params: { id: nextImageId.value },
 		});
+	}
+	// Load next page when at the end of current page
+	else if (currentImageIndex.value === store.images.length - 1 && store.currentPage < store.totalPages) {
+		await store.nextPage();
+		const firstImage = store.images[0];
+		if (firstImage) {
+			router.push({
+				name: "photo-detail",
+				params: { id: firstImage.id },
+			});
+		}
 	}
 }
 </script>
@@ -79,9 +101,7 @@ function goToNextImage() {
 
 		<div v-else-if="!currentImage" class="not-found">
 			<p>Image not found</p>
-			<button @click="goBackToGallery" class="back-button">
-				Back to Gallery
-			</button>
+			<button @click="goBackToGallery" class="back-button">Back to Gallery</button>
 		</div>
 
 		<div v-else class="image-detail">
@@ -94,44 +114,22 @@ function goToNextImage() {
 				</div>
 
 				<div class="middle-section">
-					<button
-						class="nav-button"
-						:disabled="!hasPreviousImage"
-						@click="goToPreviousImage"
-					>
-						<img
-							src="@/assets/caret-left-regular.svg"
-							alt="Previous"
-						/>
+					<button class="nav-button" :disabled="!hasPreviousImage" @click="goToPreviousImage">
+						<img src="@/assets/caret-left-regular.svg" alt="Previous" />
 					</button>
 
-					<button
-						class="nav-button"
-						:disabled="!hasNextImage"
-						@click="goToNextImage"
-					>
-						<img
-							src="@/assets/caret-right-regular.svg"
-							alt="Next"
-						/>
+					<button class="nav-button" :disabled="!hasNextImage" @click="goToNextImage">
+						<img src="@/assets/caret-right-regular.svg" alt="Next" />
 					</button>
 				</div>
 
 				<div class="right-section">
-					<a
-						:href="currentImage.download_url"
-						class="download-btn"
-						target="_blank"
-					>
-						Download
-					</a>
+					<a :href="currentImage.download_url" class="download-btn" target="_blank"> Download </a>
 				</div>
 			</div>
 
 			<div class="details-container">
-				<div class="resolution-info">
-					{{ currentImage.width }} x {{ currentImage.height }}
-				</div>
+				<div class="resolution-info">{{ currentImage.width }} x {{ currentImage.height }}</div>
 
 				<div class="image-container">
 					<img

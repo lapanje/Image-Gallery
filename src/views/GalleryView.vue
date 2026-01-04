@@ -72,15 +72,8 @@ function retryFetch() {
 				</div>
 
 				<div class="pagination">
-					<button
-						class="page-button"
-						:disabled="store.currentPage === 1"
-						@click="store.previousPage()"
-					>
-						<img
-							src="@/assets/caret-left-regular.svg"
-							alt="Previous"
-						/>
+					<button class="page-button" :disabled="store.currentPage === 1" @click="store.previousPage()">
+						<img src="@/assets/caret-left-regular.svg" alt="Previous" />
 					</button>
 
 					<button
@@ -98,10 +91,7 @@ function retryFetch() {
 						:disabled="store.currentPage === store.totalPages"
 						@click="store.nextPage()"
 					>
-						<img
-							src="@/assets/caret-right-regular.svg"
-							alt="Next"
-						/>
+						<img src="@/assets/caret-right-regular.svg" alt="Next" />
 					</button>
 				</div>
 			</div>
@@ -122,13 +112,7 @@ function retryFetch() {
 					<div class="meta">
 						<div class="author">{{ image.author }}</div>
 						<hr />
-						<a
-							class="download-btn"
-							:href="image.download_url"
-							target="_blank"
-							rel="noreferrer"
-							@click.stop
-						>
+						<a class="download-btn" :href="image.download_url" target="_blank" rel="noreferrer" @click.stop>
 							Download
 						</a>
 					</div>
